@@ -44,11 +44,8 @@ class MetaDescriptionField extends PlainText
                     fetch(url, {method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}})
                     .then(response => response.json())
                     .then(data => {
-                        if (data.success) {
-                            field.value = data.description;
-                        } else {
-                            alert('Error: ' + (data.error || 'Failed to generate description'));
-                        }
+                        if (data.success) field.value = data.description;
+                        else alert('Error: ' + data.error);
                     })
                     .catch(error => alert('Error: ' + error))
                     .finally(() => {

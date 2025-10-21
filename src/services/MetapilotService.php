@@ -6,9 +6,12 @@ use craft\base\Component;
 use craft\elements\Entry;
 use GuzzleHttp\Client;
 use metapilot\Metapilot;
+use metapilot\traits\LoggingTrait;
 
 class MetapilotService extends Component
 {
+    use LoggingTrait;
+
     private Client $client;
 
     public function init(): void
@@ -21,11 +24,13 @@ class MetapilotService extends Component
     {
         $settings = Metapilot::$plugin->getSettings();
         if (!$settings->openAiApiKey) {
+            $this->logError('No OpenAI API key configured');
             return null;
         }
 
         $content = $this->extractContent($entry);
-        if (!$content) {
+        if (!$content || strlen(trim($content)) < 10) {
+            $this->logError('No content found in entry: ' . $entry->title . ' (content: "' . $content . '")');
             return null;
         }
 
@@ -55,7 +60,7 @@ class MetapilotService extends Component
             $data = json_decode($response->getBody(), true);
             return trim($data['choices'][0]['message']['content'] ?? '');
         } catch (\Exception $e) {
-            Craft::error('Metapilot API error: ' . $e->getMessage(), __METHOD__);
+            $this->logError('Description API error: ' . $e->getMessage());
             return null;
         }
     }
@@ -64,11 +69,13 @@ class MetapilotService extends Component
     {
         $settings = Metapilot::$plugin->getSettings();
         if (!$settings->openAiApiKey) {
+            $this->logError('No OpenAI API key configured');
             return null;
         }
 
         $content = $this->extractContent($entry);
-        if (!$content) {
+        if (!$content || strlen(trim($content)) < 10) {
+            $this->logError('No content found in entry: ' . $entry->title . ' (content: "' . $content . '")');
             return null;
         }
 
@@ -98,7 +105,7 @@ class MetapilotService extends Component
             $data = json_decode($response->getBody(), true);
             return trim($data['choices'][0]['message']['content'] ?? '');
         } catch (\Exception $e) {
-            Craft::error('Metapilot API error: ' . $e->getMessage(), __METHOD__);
+            $this->logError('Keywords API error: ' . $e->getMessage());
             return null;
         }
     }
@@ -109,17 +116,32 @@ class MetapilotService extends Component
         
         if ($entry->title) {
             $content[] = $entry->title;
+            $this->logInfo("Added title: " . $entry->title);
         }
 
-        foreach ($entry->getFieldLayout()->getCustomFields() as $field) {
-            $value = $entry->getFieldValue($field->handle);
-            
-            if (is_string($value) && trim($value)) {
-                $content[] = strip_tags($value);
+        $fieldLayout = $entry->getFieldLayout();
+        if ($fieldLayout) {
+            foreach ($fieldLayout->getCustomFields() as $field) {
+                $value = $entry->getFieldValue($field->handle);
+                $this->logInfo("Field {$field->handle}: " . gettype($value) . " - " . (is_string($value) ? substr($value, 0, 100) : 'not string'));
+                
+                if (is_string($value) && trim($value)) {
+                    $cleanValue = strip_tags($value);
+                    if (strlen(trim($cleanValue)) > 0) {
+                        $content[] = $cleanValue;
+                    }
+                } elseif (is_object($value) && method_exists($value, '__toString')) {
+                    $stringValue = (string)$value;
+                    $cleanValue = strip_tags($stringValue);
+                    if (strlen(trim($cleanValue)) > 0) {
+                        $content[] = $cleanValue;
+                    }
+                }
             }
         }
 
         $text = implode(' ', $content);
+        $this->logInfo("Final content length: " . strlen($text) . " chars");
         return substr($text, 0, 3000);
     }
 }

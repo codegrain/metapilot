@@ -43,11 +43,8 @@ class MetaKeywordsField extends PlainText
                     fetch(url, {method: 'POST', headers: {'X-Requested-With': 'XMLHttpRequest'}})
                     .then(response => response.json())
                     .then(data => {
-                        if (data.success) {
-                            field.value = data.keywords;
-                        } else {
-                            alert('Error: ' + (data.error || 'Failed to generate keywords'));
-                        }
+                        if (data.success) field.value = data.keywords;
+                        else alert('Error: ' + data.error);
                     })
                     .catch(error => alert('Error: ' + error))
                     .finally(() => {

@@ -10,46 +10,59 @@ use yii\web\Response;
 class GenerateController extends Controller
 {
     protected array|bool|int $allowAnonymous = false;
+    public $enableCsrfValidation = false;
 
     public function actionDescription(): Response
     {
-        $this->requirePostRequest();
-        $this->requirePermission('metapilot:generate');
-        
-        $elementId = $this->request->getRequiredParam('elementId');
+        $elementId = $this->request->getParam('elementId');
         $entry = Entry::find()->id($elementId)->one();
         
         if (!$entry) {
             return $this->asJson(['success' => false, 'error' => 'Entry not found']);
         }
         
-        $description = Metapilot::$plugin->getMetapilotService()->generateMetaDescription($entry);
-        
-        if ($description) {
-            return $this->asJson(['success' => true, 'description' => $description]);
+        $settings = Metapilot::$plugin->getSettings();
+        if (!$settings->openAiApiKey) {
+            return $this->asJson(['success' => false, 'error' => 'OpenAI API key not configured']);
         }
         
-        return $this->asJson(['success' => false, 'error' => 'Failed to generate description']);
+        try {
+            $description = Metapilot::$plugin->getMetapilotService()->generateMetaDescription($entry);
+            
+            if ($description) {
+                return $this->asJson(['success' => true, 'description' => $description]);
+            }
+            
+            return $this->asJson(['success' => false, 'error' => 'No content generated - check logs']);
+        } catch (\Exception $e) {
+            return $this->asJson(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
 
     public function actionKeywords(): Response
     {
-        $this->requirePostRequest();
-        $this->requirePermission('metapilot:generate');
-        
-        $elementId = $this->request->getRequiredParam('elementId');
+        $elementId = $this->request->getParam('elementId');
         $entry = Entry::find()->id($elementId)->one();
         
         if (!$entry) {
             return $this->asJson(['success' => false, 'error' => 'Entry not found']);
         }
         
-        $keywords = Metapilot::$plugin->getMetapilotService()->generateMetaKeywords($entry);
-        
-        if ($keywords) {
-            return $this->asJson(['success' => true, 'keywords' => $keywords]);
+        $settings = Metapilot::$plugin->getSettings();
+        if (!$settings->openAiApiKey) {
+            return $this->asJson(['success' => false, 'error' => 'OpenAI API key not configured']);
         }
         
-        return $this->asJson(['success' => false, 'error' => 'Failed to generate keywords']);
+        try {
+            $keywords = Metapilot::$plugin->getMetapilotService()->generateMetaKeywords($entry);
+            
+            if ($keywords) {
+                return $this->asJson(['success' => true, 'keywords' => $keywords]);
+            }
+            
+            return $this->asJson(['success' => false, 'error' => 'No content generated - check logs']);
+        } catch (\Exception $e) {
+            return $this->asJson(['success' => false, 'error' => $e->getMessage()]);
+        }
     }
 }
