@@ -15,7 +15,7 @@ class Settings extends Model
         return [
             [['openAiApiKey', 'openAiModel'], 'string'],
             [['overwriteExisting'], 'boolean'],
-            [['openAiApiKey'], 'required'],
+            [['openAiApiKey'], 'safe'],
         ];
     }
 

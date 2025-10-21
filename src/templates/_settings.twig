@@ -1,0 +1,31 @@
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+    label: 'OpenAI API Key'|t('app'),
+    instructions: 'Enter your OpenAI API key to enable AI-powered meta content generation.'|t('app'),
+    name: 'settings[openAiApiKey]',
+    value: settings.openAiApiKey,
+    type: 'password',
+    errors: settings.getErrors('openAiApiKey')
+}) }}
+
+{{ forms.selectField({
+    label: 'OpenAI Model'|t('app'),
+    instructions: 'Choose the OpenAI model to use for content generation.'|t('app'),
+    name: 'settings[openAiModel]',
+    value: settings.openAiModel,
+    options: [
+        { value: 'gpt-4o-mini', label: 'GPT-4o Mini (Recommended)' },
+        { value: 'gpt-4o', label: 'GPT-4o' },
+        { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo' }
+    ],
+    errors: settings.getErrors('openAiModel')
+}) }}
+
+{{ forms.lightswitchField({
+    label: 'Overwrite Existing Values'|t('app'),
+    instructions: 'If enabled, AI generation will overwrite existing meta content.'|t('app'),
+    name: 'settings[overwriteExisting]',
+    on: settings.overwriteExisting,
+    errors: settings.getErrors('overwriteExisting')
+}) }}

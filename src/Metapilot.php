@@ -74,10 +74,9 @@ class Metapilot extends Plugin
 
     public function getSettingsResponse(): mixed
     {
-        $this->requireAdminOrPermission('metapilot:settings');
-        return Craft::$app->controller->renderTemplate('metapilot/settings', [
+        return Craft::$app->controller->renderTemplate('metapilot/_settings', [
+            'plugin' => $this,
             'settings' => $this->getSettings(),
-            'title' => 'Metapilot Settings',
         ]);
     }
 
