@@ -1,4 +1,7 @@
-# Metapilot
+<p align="center">
+  <img src="https://github.com/codegrain/metapilot/blob/main/src/icon.svg" width="96" height="96" alt="Metapilot icon">
+</p>
+<h1 align="center">Metapilot</h1>
 
 AI-powered meta descriptions and keywords for Craft CMS entries.
 
