@@ -21,7 +21,3 @@ AI-powered meta descriptions and keywords for Craft CMS entries.
 1. Create new fields using "Meta Description (AI)" or "Meta Keywords (AI)" field types
 2. Add these fields to your entry types
 3. When editing entries, click the "Generate" buttons to create AI-powered meta content
-
-## Author
-
-Andrii Balashov (andbalashov@hotmail.com)
