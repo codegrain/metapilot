@@ -18,13 +18,5 @@ class DashboardController extends Controller
         ]);
     }
 
-    public function actionSettings(): Response
-    {
-        $this->requirePermission('metapilot:settings');
-        
-        return $this->renderTemplate('metapilot/settings', [
-            'settings' => Metapilot::$plugin->getSettings(),
-            'title' => 'Metapilot Settings',
-        ]);
-    }
+
 }

@@ -37,7 +37,6 @@ class Metapilot extends Plugin
         Event::on(UrlManager::class, UrlManager::EVENT_REGISTER_CP_URL_RULES, function (RegisterUrlRulesEvent $event) {
             $event->rules['metapilot'] = 'metapilot/dashboard/index';
             $event->rules['metapilot/dashboard'] = 'metapilot/dashboard/index';
-            $event->rules['metapilot/settings'] = 'metapilot/dashboard/settings';
             $event->rules['metapilot/generate/description'] = 'metapilot/generate/description';
             $event->rules['metapilot/generate/keywords'] = 'metapilot/generate/keywords';
         });
@@ -62,7 +61,7 @@ class Metapilot extends Plugin
         $item['url'] = 'metapilot';
         $item['subnav'] = [
             'dashboard' => ['label' => 'Dashboard', 'url' => 'metapilot/dashboard'],
-            'settings' => ['label' => 'Settings', 'url' => 'metapilot/settings'],
+            'settings' => ['label' => 'Settings', 'url' => 'settings/plugins/metapilot'],
         ];
         return $item;
     }
