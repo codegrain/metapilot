@@ -1,31 +1,46 @@
+{% extends "_layouts/cp" %}
 {% import "_includes/forms" as forms %}
+{% set title = title ?? "Metapilot Settings" %}
 
-{{ forms.textField({
-    label: 'OpenAI API Key'|t('app'),
-    instructions: 'Enter your OpenAI API key to enable AI-powered meta content generation.'|t('app'),
+{% block content %}
+<form method="post" accept-charset="UTF-8">
+  {{ csrfInput() }}
+  {{ actionInput('plugins/save-plugin-settings') }}
+  {{ hiddenInput('pluginHandle', 'metapilot') }}
+
+  {{ forms.autosuggestField({
+    label: "OpenAI API Key"|t,
+    id: 'openAiApiKey',
     name: 'settings[openAiApiKey]',
     value: settings.openAiApiKey,
-    type: 'password',
-    errors: settings.getErrors('openAiApiKey')
-}) }}
+    suggestEnvVars: true,
+    placeholder: 'METAPILOT_OPENAI_API_KEY',
+    instructions: 'Enter your OpenAI API key to enable AI-powered meta content generation.'
+  }) }}
 
-{{ forms.selectField({
-    label: 'OpenAI Model'|t('app'),
-    instructions: 'Choose the OpenAI model to use for content generation.'|t('app'),
+  {{ forms.selectField({
+    label: "OpenAI Model"|t,
+    id: 'openAiModel',
     name: 'settings[openAiModel]',
-    value: settings.openAiModel,
+    value: settings.openAiModel ?? 'gpt-4o-mini',
     options: [
-        { value: 'gpt-4o-mini', label: 'GPT-4o Mini (Recommended)' },
-        { value: 'gpt-4o', label: 'GPT-4o' },
-        { value: 'gpt-3.5-turbo', label: 'GPT-3.5 Turbo' }
+      {label: 'GPT-4o Mini (Recommended)', value: 'gpt-4o-mini'},
+      {label: 'GPT-4o', value: 'gpt-4o'},
+      {label: 'GPT-3.5 Turbo', value: 'gpt-3.5-turbo'}
     ],
-    errors: settings.getErrors('openAiModel')
-}) }}
+    instructions: 'Choose the OpenAI model to use for content generation.'
+  }) }}
 
-{{ forms.lightswitchField({
-    label: 'Overwrite Existing Values'|t('app'),
-    instructions: 'If enabled, AI generation will overwrite existing meta content.'|t('app'),
+  {{ forms.lightswitchField({
+    label: "Overwrite existing values"|t,
+    id: 'overwriteExisting',
     name: 'settings[overwriteExisting]',
     on: settings.overwriteExisting,
-    errors: settings.getErrors('overwriteExisting')
-}) }}
+    instructions: 'If enabled, Metapilot will replace existing meta descriptions and keywords.'
+  }) }}
+
+  <div class="buttons">
+    <button type="submit" class="btn submit">Save settings</button>
+  </div>
+</form>
+{% endblock %}
