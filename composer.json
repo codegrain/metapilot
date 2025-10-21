@@ -1,0 +1,33 @@
+{
+  "name": "codegrain/metapilot",
+  "description": "AI-powered meta descriptions and keywords for Craft CMS entries",
+  "type": "craft-plugin",
+  "version": "1.0.0",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Andrii Balashov",
+      "email": "andbalashov@hotmail.com"
+    }
+  ],
+  "keywords": ["craftcms", "entries", "meta description", "keywords", "seo", "ai"],
+  "require": {
+    "php": "^8.2",
+    "craftcms/cms": "^5.0",
+    "guzzlehttp/guzzle": "^7.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "metapilot\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Metapilot",
+    "handle": "metapilot",
+    "class": "metapilot\\Metapilot",
+    "description": "AI-powered meta descriptions and keywords for Craft CMS entries",
+    "schemaVersion": "1.0.0",
+    "hasCpSettings": true,
+    "hasCpSection": true
+  }
+}

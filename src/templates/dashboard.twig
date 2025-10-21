@@ -1,0 +1,23 @@
+{% extends "_layouts/cp" %}
+{% set title = "Metapilot Dashboard" %}
+
+{% block content %}
+    <div class="pane">
+        <h2>AI-Powered Meta Content Generator</h2>
+        <p>Use Metapilot field types in your entry types to automatically generate meta descriptions and keywords based on entry content.</p>
+        
+        <div class="field">
+            <div class="heading">
+                <label>How to use Metapilot:</label>
+            </div>
+            <div class="instructions">
+                <ol>
+                    <li>Go to Settings → Fields and create new fields using the "Meta Description (AI)" or "Meta Keywords (AI)" field types</li>
+                    <li>Add these fields to your entry types</li>
+                    <li>When editing entries, click the "Generate" buttons to create AI-powered meta content</li>
+                    <li>Configure your OpenAI API key in the Settings tab</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+{% endblock %}
